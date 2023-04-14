@@ -61,7 +61,7 @@ $ docker run -p 9000:80 -it redir-expr:latest
 
 3. Test
 
-    Do this on this host machine. Open terminal:
+    Do this on the host machine. Open terminal:
 
     ```bash
     $ curl -v -L http://app1.domain.com:9000/login
