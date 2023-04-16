@@ -57,6 +57,8 @@ $ docker build -t redir-expr:latest --no-cache .
 
 ```bash
 $ docker run -p 9000:80 -it redir-expr:latest
+AH00558: httpd: Could not reliably determine the server's fully qualified domain name, using 172.17.0.2. Set the 'ServerName' directive globally to suppress this message
+serving at port 8000
 ```
 
 3. Test
@@ -65,7 +67,76 @@ $ docker run -p 9000:80 -it redir-expr:latest
 
     ```bash
     $ curl -v -L http://app1.domain.com:9000/login
+    *   Trying 127.0.0.1:9000...
+    * Connected to app1.domain.com (127.0.0.1) port 9000 (#0)
+    > GET /login HTTP/1.1
+    > Host: app1.domain.com:9000
+    > User-Agent: curl/7.86.0
+    > Accept: */*
+    >
+    * Mark bundle as not supporting multiuse
+    < HTTP/1.1 301 Moved Permanently
+    < Date: Sun, 16 Apr 2023 09:08:31 GMT
+    < Server: SimpleHTTP/0.6 Python/3.9.2
+    < Location: /home
+    < Transfer-Encoding: chunked
+    <
+    * Ignoring the response-body
+    * Connection #0 to host app1.domain.com left intact
+    * Issue another request to this URL: 'http://app1.domain.com:9000/home'
+    * Found bundle for host: 0x600003df48a0 [serially]
+    * Can not multiplex, even if we wanted to
+    * Re-using existing connection #0 with host app1.domain.com
+    * Connected to app1.domain.com (127.0.0.1) port 9000 (#0)
+    > GET /home HTTP/1.1
+    > Host: app1.domain.com:9000
+    > User-Agent: curl/7.86.0
+    > Accept: */*
+    >
+    * Mark bundle as not supporting multiuse
+    < HTTP/1.1 200 OK
+    < Date: Sun, 16 Apr 2023 09:08:31 GMT
+    < Server: SimpleHTTP/0.6 Python/3.9.2
+    < Transfer-Encoding: chunked
+    <
+    * Connection #0 to host app1.domain.com left intact
+    <foo>bar</foo>%
+
     $ curl -v -L http://app2.domain.com:9000/login
+    *   Trying 127.0.0.1:9000...
+    * Connected to app2.domain.com (127.0.0.1) port 9000 (#0)
+    > GET /login HTTP/1.1
+    > Host: app2.domain.com:9000
+    > User-Agent: curl/7.86.0
+    > Accept: */*
+    >
+    * Mark bundle as not supporting multiuse
+    < HTTP/1.1 301 Moved Permanently
+    < Date: Sun, 16 Apr 2023 09:08:50 GMT
+    < Server: SimpleHTTP/0.6 Python/3.9.2
+    < Location: /home
+    < Transfer-Encoding: chunked
+    <
+    * Ignoring the response-body
+    * Connection #0 to host app2.domain.com left intact
+    * Issue another request to this URL: 'http://app2.domain.com:9000/home'
+    * Found bundle for host: 0x600002b608a0 [serially]
+    * Can not multiplex, even if we wanted to
+    * Re-using existing connection #0 with host app2.domain.com
+    * Connected to app2.domain.com (127.0.0.1) port 9000 (#0)
+    > GET /home HTTP/1.1
+    > Host: app2.domain.com:9000
+    > User-Agent: curl/7.86.0
+    > Accept: */*
+    >
+    * Mark bundle as not supporting multiuse
+    < HTTP/1.1 200 OK
+    < Date: Sun, 16 Apr 2023 09:08:50 GMT
+    < Server: SimpleHTTP/0.6 Python/3.9.2
+    < Transfer-Encoding: chunked
+    <
+    * Connection #0 to host app2.domain.com left intact
+    <foo>bar</foo>%
     ```
 
     Alternatively, you can also use a browser to verify the redirect behavior.
